@@ -50,6 +50,7 @@
     <Compile Include="WhenCreatingNewInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WhenReadingGoogleIssuesData.cs" />
+    <Compile Include="WhenWritingGithubIssues.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

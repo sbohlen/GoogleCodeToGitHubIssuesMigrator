@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileHelpers;
+using Octokit;
 
 namespace IssuesImporter
 {
@@ -34,7 +36,6 @@ namespace IssuesImporter
                 return false;
             }
         }
-
 
         public IEnumerable<GoogleIssue> GetIssues()
         {
