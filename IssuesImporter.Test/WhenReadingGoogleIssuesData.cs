@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace IssuesImporter.Test
 {
     [TestFixture]
-    public class WhenReadingData
+    public class WhenReadingGoogleIssuesData
     {
         private GoogleIssuesDataFileReader _reader;
         private const string InputDataFile = @"TestData\TestInputDataFile.csv";

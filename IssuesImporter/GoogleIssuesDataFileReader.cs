@@ -44,7 +44,7 @@ namespace IssuesImporter
 
             foreach (var row in inputRows)
             {
-                var elements = SplitRowIntoDataElements(row);
+                var elements = SplitStringIntoSeparateElements(row);
 
                 issues.Add(
                     new GoogleIssue()
@@ -56,7 +56,7 @@ namespace IssuesImporter
                         Milestone = elements[4],
                         Owner = elements[5],
                         Summary = elements[6],
-                        Labels = SplitRowIntoDataElements(elements[7]).ToList()
+                        Labels = SplitStringIntoSeparateElements(elements[7]).ToList()
                     });
             }
 
@@ -64,21 +64,9 @@ namespace IssuesImporter
 
         }
 
-        private string[] SplitRowIntoDataElements(string row)
+        private string[] SplitStringIntoSeparateElements(string row, string delimiter = ",")
         {
-            return row.Split(",".ToCharArray());
+            return row.Split(delimiter.ToCharArray());
         }
-    }
-
-    public class GoogleIssue
-    {
-        public int Id { get; set; }
-        public string IssueType { get; set; }
-        public string Status { get; set; }
-        public string Priority { get; set; }
-        public string Milestone { get; set; }
-        public string Owner { get; set; }
-        public string Summary { get; set; }
-        public IEnumerable<string> Labels { get; set; }
     }
 }

@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GithubIssuesWriter.cs" />
+    <Compile Include="GoogleIssue.cs" />
     <Compile Include="GoogleIssuesDataFileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
