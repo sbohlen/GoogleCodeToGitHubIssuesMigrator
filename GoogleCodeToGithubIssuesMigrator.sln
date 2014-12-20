@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssuesImporter", "IssuesImporter\IssuesImporter.csproj", "{BE07BEC7-32CE-4FED-B508-F47BE1292119}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssuesImporter.Test", "IssuesImporter.Test\IssuesImporter.Test.csproj", "{AA994D50-A76C-468C-B7AA-146DF38DDAAB}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE07BEC7-32CE-4FED-B508-F47BE1292119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE07BEC7-32CE-4FED-B508-F47BE1292119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE07BEC7-32CE-4FED-B508-F47BE1292119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE07BEC7-32CE-4FED-B508-F47BE1292119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA994D50-A76C-468C-B7AA-146DF38DDAAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA994D50-A76C-468C-B7AA-146DF38DDAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA994D50-A76C-468C-B7AA-146DF38DDAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA994D50-A76C-468C-B7AA-146DF38DDAAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
