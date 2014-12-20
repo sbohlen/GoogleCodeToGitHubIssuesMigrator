@@ -11,7 +11,7 @@ namespace IssuesImporter.Test
     public class WhenReadingData
     {
         private GoogleIssuesDataFileReader _reader;
-        private const string InputDataFile = @"..\..\TestData\TestInputDataFile.csv";
+        private const string InputDataFile = @"TestData\TestInputDataFile.csv";
 
         [SetUp]
         public void SetUp()
@@ -23,7 +23,7 @@ namespace IssuesImporter.Test
         public void CanHydrateGoogleIssues()
         {
             var issues = _reader.GetIssues();
-
+            Assert.That(issues.Count(), Is.EqualTo(57));
         }
     }
 }

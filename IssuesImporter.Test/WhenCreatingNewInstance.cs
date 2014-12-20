@@ -11,7 +11,7 @@ namespace IssuesImporter.Test
     public class WhenCreatingNewInstance
     {
         private GoogleIssuesDataFileReader _reader;
-        private const string InputDataFile = @"..\..\TestData\TestInputDataFile.csv";
+        private const string InputDataFile = @"TestData\TestInputDataFile.csv";
 
         [SetUp]
         public void SetUp()
