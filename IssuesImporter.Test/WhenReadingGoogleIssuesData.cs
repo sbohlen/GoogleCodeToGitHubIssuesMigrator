@@ -23,7 +23,7 @@ namespace IssuesImporter.Test
         public void CanHydrateGoogleIssues()
         {
             var issues = _reader.GetIssues();
-            Assert.That(issues.Count(), Is.EqualTo(57));
+            Assert.That(issues.Count(), Is.EqualTo(10));
         }
     }
 }

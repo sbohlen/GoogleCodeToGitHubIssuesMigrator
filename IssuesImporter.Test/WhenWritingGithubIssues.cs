@@ -17,7 +17,6 @@ namespace IssuesImporter.Test
         private GitHubClient _client;
         private Credentials _basicAuth;
         private IIssuesClient _issuesClient;
-        private Repository _repository;
 
         [Test]
         public async void CanAddIssueToGitHub()
@@ -42,7 +41,7 @@ namespace IssuesImporter.Test
                 newIssue.Body =
                     string.Format(
                     "This issue ported from the deprecated GoogleCode site (https://code.google.com/p/ndbunit)." +
-                    "\n\nSee https://code.google.com/p/ndbunit/issues/detail?id={0} for more of the history and details for this issue.",
+                    "\n\nSee https://code.google.com/p/ndbunit/issues/detail?id={0} for more history and details for this issue.",
                     googleIssue.Id);
 
                 gitHubIssues.Add(newIssue);
