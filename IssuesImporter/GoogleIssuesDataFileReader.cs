@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileHelpers;
-using Octokit;
+using CsvHelper;
 
 namespace IssuesImporter
 {
@@ -37,15 +33,20 @@ namespace IssuesImporter
             }
         }
 
+
         public IEnumerable<GoogleIssue> GetIssues()
         {
+            var csv = new CsvParser(new StringReader(File.ReadAllText(InputDataFile)));
+
             var issues = new List<GoogleIssue>();
 
-            var inputRows = File.ReadLines(_inputDataFile);
-
-            foreach (var row in inputRows)
+            while (true)
             {
-                var elements = SplitStringIntoSeparateElements(row);
+                var elements = csv.Read();
+                if (elements == null)
+                {
+                    break;
+                }
 
                 issues.Add(
                     new GoogleIssue()
@@ -59,15 +60,17 @@ namespace IssuesImporter
                         Summary = elements[6],
                         Labels = SplitStringIntoSeparateElements(elements[7]).ToList()
                     });
+
             }
 
             return issues;
 
         }
 
-        private string[] SplitStringIntoSeparateElements(string row, string delimiter = ",")
+
+        private string[] SplitStringIntoSeparateElements(string input, string delimiter = ",")
         {
-            return row.Split(delimiter.ToCharArray());
+            return input.Split(delimiter.ToCharArray());
         }
     }
 }
