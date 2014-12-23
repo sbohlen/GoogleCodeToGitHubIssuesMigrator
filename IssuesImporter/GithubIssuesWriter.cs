@@ -13,19 +13,24 @@ namespace IssuesImporter
     public class GitHubIssuesWriter
     {
         private const string GitHubApiAccessToken = "03f37ffab000ed46dfa912a554f03d2cc8bf2d67";
+        private const string GitHubApiProductHeaderValue = "google%20code%20to%20github%20issue%20migrator";
         private const string GitHubRepositoryOwner = "NDbUnit";
         private const string GitHubRepositoryName = "test-issues-import";
         private const string GoogleCodeProjectName = "NDbUnit";
         private const string GoogleCodeProjectUrl = "https://code.google.com/p/ndbunit";
-
         private const string GoogleCodeIssueUrlStringFormatTemplate =
             "https://code.google.com/p/ndbunit/issues/detail?id={0}";
+
+        private const int GitHubApiThrottleOnCreateInvocationCount = 20;
+        private const int GitHubApiThrottleOnCreatePauseDurationMilliseconds = 70000;
+
+
 
         private readonly IIssuesClient _issuesClient;
 
         public GitHubIssuesWriter()
         {
-            var client = new GitHubClient(new ProductHeaderValue("google%20code%20to%20github%20issue%20migrator"))
+            var client = new GitHubClient(new ProductHeaderValue(GitHubApiProductHeaderValue))
             {
                 Credentials = new Credentials(GitHubApiAccessToken)
             };
@@ -93,10 +98,10 @@ namespace IssuesImporter
             foreach (var gitHubIssue in gitHubIssuesToCreate)
             {
 
-                if (Math.Abs(issueCounter % 20.0) < 0.1)
+                if (Math.Abs(issueCounter % GitHubApiThrottleOnCreateInvocationCount) < 0.1)
                 {
-                    Debug.WriteLine("Sleeping for 70s to avoid GitHub anti-DoS policies on CREATE API calls...");
-                    Thread.Sleep(70000);
+                    Debug.WriteLine("Sleeping for {0} milliseconds to avoid GitHub anti-DoS policies on CREATE API calls...", GitHubApiThrottleOnCreatePauseDurationMilliseconds);
+                    Thread.Sleep(GitHubApiThrottleOnCreatePauseDurationMilliseconds);
                 }
 
                 var issue = await _issuesClient.Create(GitHubRepositoryOwner, GitHubRepositoryName, gitHubIssue);
@@ -110,6 +115,7 @@ namespace IssuesImporter
 
             return gitHubIssuesCreated;
         }
+
 
         private IEnumerable<NewIssue> AssembleListOfGitHubIssuesToCreate(IEnumerable<GoogleIssue> googleIssues)
         {
