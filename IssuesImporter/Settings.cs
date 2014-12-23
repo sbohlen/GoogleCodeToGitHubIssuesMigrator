@@ -19,7 +19,7 @@ namespace IssuesImporter
         public int GitHubApiThrottleOnCreateInvocationCount { get; private set; }
         public int GitHubApiThrottleOnCreatePauseDurationMilliseconds { get; private set; }
 
-        private IKeyValueReader _keyValueReader;
+        private readonly IKeyValueReader _keyValueReader;
 
         public Settings(IKeyValueReader keyValueReader)
         {
@@ -35,17 +35,17 @@ namespace IssuesImporter
 
         public void ReadConfig()
         {
-            var allConfigKeys = _keyValueReader.AllKeys().ToArray();
-
-            ValidateAllMandatoryValuesProvided(allConfigKeys);
+            ValidateAllMandatoryValuesAreProvided();
 
             ReadMandatoryValues();
             
-            ReadOptionalValuesIfPresent(allConfigKeys);
+            ReadOptionalValuesIfProvided();
         }
 
-        private void ValidateAllMandatoryValuesProvided(IEnumerable<string> allConfigKeys)
+        private void ValidateAllMandatoryValuesAreProvided()
         {
+            var allConfigKeys = _keyValueReader.AllKeys().ToArray();
+
             var missingMandatoryKeys = GetMissingMandatoryKeys(allConfigKeys).ToArray();
 
             if (missingMandatoryKeys.Any())
@@ -65,8 +65,10 @@ namespace IssuesImporter
             }
         }
 
-        private void ReadOptionalValuesIfPresent(string[] allConfigKeys)
+        private void ReadOptionalValuesIfProvided()
         {
+            var allConfigKeys = _keyValueReader.AllKeys().ToArray();
+
             //optional values...
             if (allConfigKeys.Contains("GitHubApiProductHeaderValue"))
             {
