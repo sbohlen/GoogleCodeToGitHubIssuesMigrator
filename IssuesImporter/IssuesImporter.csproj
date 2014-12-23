@@ -47,10 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfigKeyValueReader.cs" />
+    <Compile Include="AppConfigReader.cs" />
     <Compile Include="GitHubIssuesWriter.cs" />
     <Compile Include="GoogleIssue.cs" />
-    <Compile Include="GoogleIssuesDataFileReader.cs" />
+    <Compile Include="GoogleIssuesReader.cs" />
     <Compile Include="IKeyValueReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />

@@ -8,15 +8,15 @@ using NUnit.Framework;
 namespace IssuesImporter.Test
 {
     [TestFixture]
-    public class WhenCreatingNewInstance
+    public class WhenCreatingNewGoogleIssuesReader
     {
-        private GoogleIssuesDataFileReader _reader;
+        private GoogleIssuesReader _reader;
         private const string InputDataFile = @"TestData\TestInputDataFile.csv";
 
         [SetUp]
         public void SetUp()
         {
-            _reader = new GoogleIssuesDataFileReader(InputDataFile);
+            _reader = new GoogleIssuesReader(InputDataFile);
         }
 
 
@@ -35,7 +35,7 @@ namespace IssuesImporter.Test
         [Test]
         public void CanValidateThatUnreadableFileIsInvalid()
         {
-            var invalidReader = new GoogleIssuesDataFileReader("not-valid-file.csv");
+            var invalidReader = new GoogleIssuesReader("not-valid-file.csv");
             Assert.That(invalidReader.IsInputDataFileValid(), Is.False);
         }
         

@@ -10,13 +10,13 @@ namespace IssuesImporter.Test
     [TestFixture]
     public class WhenReadingGoogleIssuesData
     {
-        private GoogleIssuesDataFileReader _reader;
+        private GoogleIssuesReader _reader;
         private const string InputDataFile = @"TestData\TestInputDataFile.csv";
 
         [SetUp]
         public void SetUp()
         {
-            _reader = new GoogleIssuesDataFileReader(InputDataFile);
+            _reader = new GoogleIssuesReader(InputDataFile);
         }
 
         [Test]

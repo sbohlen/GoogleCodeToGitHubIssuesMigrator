@@ -46,8 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExperimentationWithOctoKitApi.cs" />
-    <Compile Include="WhenCreatingNewInstance.cs" />
+    <Compile Include="WhenCreatingNewGoogleIssuesReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WhenReadingGoogleIssuesData.cs" />
   </ItemGroup>

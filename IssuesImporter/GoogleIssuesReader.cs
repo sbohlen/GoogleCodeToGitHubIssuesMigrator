@@ -6,11 +6,11 @@ using CsvHelper;
 
 namespace IssuesImporter
 {
-    public class GoogleIssuesDataFileReader
+    public class GoogleIssuesReader
     {
         private readonly string _inputDataFile;
 
-        public GoogleIssuesDataFileReader(string inputDataFile)
+        public GoogleIssuesReader(string inputDataFile)
         {
             _inputDataFile = inputDataFile;
         }
