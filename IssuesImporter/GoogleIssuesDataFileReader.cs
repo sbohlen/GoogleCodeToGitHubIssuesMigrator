@@ -36,6 +36,11 @@ namespace IssuesImporter
 
         public IEnumerable<GoogleIssue> GetIssues()
         {
+            if (!IsInputDataFileValid())
+            {
+                throw new InvalidOperationException(string.Format("Cannot access inoput file [{0}].  Ensure that the file exists and can be opened for READ access.", _inputDataFile));
+            }
+
             var csv = new CsvParser(new StringReader(File.ReadAllText(InputDataFile)));
 
             var issues = new List<GoogleIssue>();
