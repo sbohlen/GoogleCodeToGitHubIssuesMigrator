@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace IssuesImporter
 {
-    public class ConfigurationManagerKeyValueReader : IKeyValueReader
+    public class AppConfigKeyValueReader : IKeyValueReader
     {
         public string Read(string key)
         {
