@@ -12,27 +12,16 @@ namespace IssuesImporter
 {
     public class GitHubIssuesWriter
     {
-        private const string GitHubApiAccessToken = "03f37ffab000ed46dfa912a554f03d2cc8bf2d67";
-        private const string GitHubApiProductHeaderValue = "google%20code%20to%20github%20issue%20migrator";
-        private const string GitHubRepositoryOwner = "NDbUnit";
-        private const string GitHubRepositoryName = "test-issues-import";
-        private const string GoogleCodeProjectName = "NDbUnit";
-        private const string GoogleCodeProjectUrl = "https://code.google.com/p/ndbunit";
-        private const string GoogleCodeIssueUrlStringFormatTemplate =
-            "https://code.google.com/p/ndbunit/issues/detail?id={0}";
-
-        private const int GitHubApiThrottleOnCreateInvocationCount = 20;
-        private const int GitHubApiThrottleOnCreatePauseDurationMilliseconds = 70000;
-
-
-
+        private Settings _settings;
         private readonly IIssuesClient _issuesClient;
 
-        public GitHubIssuesWriter()
+        public GitHubIssuesWriter(Settings settings)
         {
-            var client = new GitHubClient(new ProductHeaderValue(GitHubApiProductHeaderValue))
+            _settings = settings;
+
+            var client = new GitHubClient(new ProductHeaderValue(_settings.GitHubApiProductHeaderValue))
             {
-                Credentials = new Credentials(GitHubApiAccessToken)
+                Credentials = new Credentials(_settings.GitHubApiAccessToken)
             };
 
             _issuesClient = client.Issue;
@@ -65,7 +54,7 @@ namespace IssuesImporter
                 //santity-check: ensure that the target issue actually exists on GitHub, report error if not found
                 try
                 {
-                    var gitHubIssueToUpdate = await _issuesClient.Get(GitHubRepositoryOwner, GitHubRepositoryName, gitHubIssue.Number);
+                    var gitHubIssueToUpdate = await _issuesClient.Get(_settings.GitHubRepositoryOwner, _settings.GitHubRepositoryName, gitHubIssue.Number);
                     if (null == gitHubIssueToUpdate)
                     {
                         Debug.WriteLine(gitHubIssueNotFoundStringFormatTemplate, correspondingGoogleIssue.Id);
@@ -83,7 +72,7 @@ namespace IssuesImporter
 
                 var issueUpdate = ComposeIssueUpdate(correspondingGoogleIssue);
 
-                await _issuesClient.Update(GitHubRepositoryOwner, GitHubRepositoryName, gitHubIssue.Number, issueUpdate);
+                await _issuesClient.Update(_settings.GitHubRepositoryOwner, _settings.GitHubRepositoryName, gitHubIssue.Number, issueUpdate);
             }
         }
 
@@ -98,13 +87,13 @@ namespace IssuesImporter
             foreach (var gitHubIssue in gitHubIssuesToCreate)
             {
 
-                if (Math.Abs(issueCounter % GitHubApiThrottleOnCreateInvocationCount) < 0.1)
+                if (Math.Abs(issueCounter % _settings.GitHubApiThrottleOnCreateInvocationCount) < 0.1)
                 {
-                    Debug.WriteLine("Sleeping for {0} milliseconds to avoid GitHub anti-DoS policies on CREATE API calls...", GitHubApiThrottleOnCreatePauseDurationMilliseconds);
-                    Thread.Sleep(GitHubApiThrottleOnCreatePauseDurationMilliseconds);
+                    Debug.WriteLine("Sleeping for {0} milliseconds to avoid GitHub anti-DoS policies on CREATE API calls...", _settings.GitHubApiThrottleOnCreatePauseDurationMilliseconds);
+                    Thread.Sleep(_settings.GitHubApiThrottleOnCreatePauseDurationMilliseconds);
                 }
 
-                var issue = await _issuesClient.Create(GitHubRepositoryOwner, GitHubRepositoryName, gitHubIssue);
+                var issue = await _issuesClient.Create(_settings.GitHubRepositoryOwner, _settings.GitHubRepositoryName, gitHubIssue);
 
                 Debug.WriteLine("Added Issue #{0} to GitHub.", issue.Number);
 
@@ -129,7 +118,7 @@ namespace IssuesImporter
                     string.Format(
                         "This issue ported from the deprecated GoogleCode {0} site ({1})." +
                         "\n\nSee {2} for more history and details for this specific issue.",
-                        GoogleCodeProjectName, GoogleCodeProjectUrl, googleCodeIssueUrl);
+                        _settings.GoogleCodeProjectName, _settings.GoogleCodeProjectUrl, googleCodeIssueUrl);
 
                 gitHubIssuesToCreate.Add(newIssue);
             }
@@ -185,7 +174,7 @@ namespace IssuesImporter
 
         private string ComposeGoogleCodeIssueUrl(GoogleIssue googleIssue)
         {
-            return string.Format(GoogleCodeIssueUrlStringFormatTemplate, googleIssue.Id);
+            return string.Format(_settings.GoogleCodeIssueUrlStringFormatTemplate, googleIssue.Id);
         }
     }
 }
