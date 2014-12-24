@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Common.Logging;
 using CsvHelper;
+using Octokit;
 
 namespace IssuesImporter
 {
     public class GoogleIssuesReader
     {
         private readonly string _inputDataFile;
+        public ILog Logger { private get; set; }
 
         public GoogleIssuesReader(string inputDataFile)
         {
             _inputDataFile = inputDataFile;
+            Logger = LogManager.GetLogger(this.GetType());
         }
 
         public string InputDataFile
@@ -38,7 +42,9 @@ namespace IssuesImporter
         {
             if (!IsInputDataFileValid())
             {
-                throw new InvalidOperationException(string.Format("Cannot access inoput file [{0}].  Ensure that the file exists and can be opened for READ access.", _inputDataFile));
+                var message = string.Format("Cannot access inoput file [{0}].  Ensure that the file exists and can be opened for READ access.", _inputDataFile);
+                Logger.Error(message);
+                throw new InvalidOperationException(message);
             }
 
             var csv = new CsvParser(new StringReader(File.ReadAllText(InputDataFile)));
@@ -73,7 +79,7 @@ namespace IssuesImporter
         }
 
 
-        private string[] SplitStringIntoSeparateElements(string input, string delimiter = ",")
+        private IEnumerable<string> SplitStringIntoSeparateElements(string input, string delimiter = ",")
         {
             return input.Split(delimiter.ToCharArray());
         }

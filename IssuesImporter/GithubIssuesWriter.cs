@@ -6,14 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Logging;
 using Octokit;
 
 namespace IssuesImporter
 {
     public class GitHubIssuesWriter
     {
-        private Settings _settings;
+        private readonly Settings _settings;
         private readonly IIssuesClient _issuesClient;
+
+        public ILog Logger { private get; set; }
 
         public GitHubIssuesWriter(Settings settings)
         {
@@ -25,6 +28,8 @@ namespace IssuesImporter
             };
 
             _issuesClient = client.Issue;
+
+            Logger = LogManager.GetLogger(this.GetType());
         }
 
         public async Task WriteIssues(IEnumerable<GoogleIssue> googleIssues)
@@ -57,18 +62,21 @@ namespace IssuesImporter
                     var gitHubIssueToUpdate = await _issuesClient.Get(_settings.GitHubRepositoryOwner, _settings.GitHubRepositoryName, gitHubIssue.Number);
                     if (null == gitHubIssueToUpdate)
                     {
-                        Debug.WriteLine(gitHubIssueNotFoundStringFormatTemplate, correspondingGoogleIssue.Id);
-                        continue;
+                        //just throw in order to end up in the catch block...
+                        throw new Exception();
                     }
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine(gitHubIssueNotFoundStringFormatTemplate, correspondingGoogleIssue.Id);
+                    Logger.ErrorFormat(gitHubIssueNotFoundStringFormatTemplate, correspondingGoogleIssue.Id);
+                    
+                    //TODO: reconsider this choice to continue on here...since we require all GitHub issue numbers
+                    // to match their Google Code issue numbers, its not ENTIRELY correct to just log-and-ignore this error condition...
                     continue;
                 }
 
                 //assuming we got this far, process the update...
-                Debug.WriteLine("Processing Update to Issue #{0}", correspondingGoogleIssue.Id);
+                Logger.InfoFormat("Processing Update to Issue #{0}", correspondingGoogleIssue.Id);
 
                 var issueUpdate = ComposeIssueUpdate(correspondingGoogleIssue);
 
@@ -89,13 +97,13 @@ namespace IssuesImporter
 
                 if (Math.Abs(issueCounter % _settings.GitHubApiThrottleOnCreateInvocationCount) < 0.1)
                 {
-                    Debug.WriteLine("Sleeping for {0} milliseconds to avoid GitHub anti-DoS policies on CREATE API calls...", _settings.GitHubApiThrottleOnCreatePauseDurationMilliseconds);
+                    Logger.InfoFormat("Sleeping for {0} milliseconds to avoid GitHub anti-DoS policies on CREATE API calls...", _settings.GitHubApiThrottleOnCreatePauseDurationMilliseconds);
                     Thread.Sleep(_settings.GitHubApiThrottleOnCreatePauseDurationMilliseconds);
                 }
 
                 var issue = await _issuesClient.Create(_settings.GitHubRepositoryOwner, _settings.GitHubRepositoryName, gitHubIssue);
 
-                Debug.WriteLine("Added Issue #{0} to GitHub.", issue.Number);
+                Logger.InfoFormat("Added Issue #{0} to GitHub.", issue.Number);
 
                 gitHubIssuesCreated.Add(issue);
 
